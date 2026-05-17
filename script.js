@@ -1,4 +1,4 @@
-function validarFormilario(){
+function validarFormulario(){
 
     let respuesta = document.getElementById("respuesta").value;
 
