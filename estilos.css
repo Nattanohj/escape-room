@@ -1,0 +1,88 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at center, #0a192f 0%, #020617 100%);
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor {
+    width: 90%;
+    max-width: 600px;
+    margin: 20px;
+    padding: 40px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    border: 2px solid #00f2ff; /* Borde cian neón */
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+}
+
+
+h1 {
+    color: #00f2ff;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+
+.pista {
+    background: rgba(0, 242, 255, 0.05);
+    border: 1px dashed #00f2ff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 25px 0;
+    font-style: italic;
+    color: #94a3b8;
+}
+
+
+input[type="text"] {
+    width: 80%;
+    padding: 12px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 5px;
+    color: #00f2ff;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border-color: #00f2ff;
+    box-shadow: 0 0 5px #00f2ff;
+}
+
+
+.boton {
+    display: inline-block;
+    background: #00f2ff;
+    color: #020617;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.boton:hover {
+    background: #020617;
+    color: #00f2ff;
+    box-shadow: 0 0 15px #00f2ff;
+    transform: scale(1.05);
+}
+
+
+@media (max-width: 480px) {
+    .contenedor { padding: 20px; }
+    h1 { font-size: 1.5rem; }
+}
