@@ -12,14 +12,90 @@ if (!isset($_SESSION["intentos"])) {
     $_SESSION["intentos"] = 0;
 }
 
-$nivel = $_SESSION["nivel"];
 $mensaje = "";
+$claseMensaje = "";
 
-$sql = "SELECT * FROM pistas WHERE orden = $nivel";
+/* VALIDAR RESPUESTA */
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $nivel_actual = $_SESSION["nivel"];
+
+    $respuesta_usuario =
+        trim($_POST["respuesta"]);
+
+    $sql_validar =
+        "SELECT * FROM pistas WHERE orden = $nivel_actual";
+
+    $resultado_validar =
+        $conexion->query($sql_validar);
+
+    if (
+        $resultado_validar &&
+        $resultado_validar->num_rows > 0
+    ) {
+
+        $pista_validar =
+            $resultado_validar->fetch_assoc();
+
+        $_SESSION["intentos"]++;
+
+        if (
+            strcasecmp(
+                trim($respuesta_usuario),
+                trim($pista_validar["respuesta"])
+            ) == 0
+        ) {
+
+            $_SESSION["nivel"]++;
+
+            $nuevo_nivel = $_SESSION["nivel"];
+
+            $sql_siguiente =
+                "SELECT * FROM pistas WHERE orden = $nuevo_nivel";
+
+            $resultado_siguiente =
+                $conexion->query($sql_siguiente);
+
+            if (
+                $resultado_siguiente &&
+                $resultado_siguiente->num_rows == 0
+            ) {
+
+                header("Location: final.php");
+                exit();
+
+            }
+
+            $mensaje =
+                "Respuesta correcta. Avanzando al siguiente nivel.";
+
+            $claseMensaje = "exito";
+
+        } else {
+
+            $mensaje =
+                "Respuesta incorrecta. El servidor rechaza el acceso.";
+
+            $claseMensaje = "error";
+
+        }
+    }
+}
+
+/* CONSULTAR PISTA ACTUAL */
+
+$nivel = $_SESSION["nivel"];
+
+$sql =
+    "SELECT * FROM pistas WHERE orden = $nivel";
 
 $resultado = $conexion->query($sql);
 
-if ($resultado->num_rows == 0) {
+if (
+    !$resultado ||
+    $resultado->num_rows == 0
+) {
 
     header("Location: final.php");
     exit();
@@ -28,36 +104,11 @@ if ($resultado->num_rows == 0) {
 
 $pista = $resultado->fetch_assoc();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $respuesta_usuario = trim($_POST["respuesta"]);
-
-    $_SESSION["intentos"]++;
-
-    if (
-        strcasecmp(
-            $respuesta_usuario,
-            $pista["respuesta"]
-        ) == 0
-    ) {
-
-        $_SESSION["nivel"]++;
-
-        header("Location: juego.php");
-        exit();
-
-    } else {
-
-        $mensaje =
-            " Respuesta incorrecta. El servidor rechaza el acceso.";
-
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
     <meta charset="UTF-8">
@@ -84,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="pista">
 
             <h2>
-                 Pista encontrada
+                Pista encontrada
             </h2>
 
             <p>
@@ -111,9 +162,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         </form>
 
-        <p class="mensaje">
-            <?php echo $mensaje; ?>
-        </p>
+        <?php if ($mensaje != "") { ?>
+
+            <p class="<?php echo $claseMensaje; ?>">
+                <?php echo $mensaje; ?>
+            </p>
+
+        <?php } ?>
 
     </div>
 
